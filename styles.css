@@ -96,18 +96,24 @@ body > .description {
     border-radius: 5px;
 }
 
-.username {
+.sender-name {
     font-family: monospace;
-    margin: 0 0;
+    margin: 0;
     color: lime;
-}
-
-.username + * {
-    margin-top: 0;
 }
 
 .message .contents img {
     width: 100%;
     max-height: calc(100vh / 1.5);
     object-fit: contain;
+}
+
+.message .metadata {
+    font-size: 0.8em;
+    color: #8F8F8F;
+    margin-left: 10px;
+}
+
+.message .sender-name + *:not(.metadata) {
+    margin-top: 5px;
 }
