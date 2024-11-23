@@ -1,0 +1,31 @@
+.flex {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.flex > * {
+    margin: 0;
+}
+
+html {
+    background-color: #212121;
+    color: #E6E6E6;
+    align-items: center;
+}
+
+body {
+    width: min(600px, 100%);
+    padding: 15px;
+}
+
+.discussion {
+    background-color: #303030;
+    flex-direction: row;
+    padding: 15px;
+    text-align: left;
+}
+
+.discussion:nth-child(even) {
+    flex-direction: row-reverse;
+    text-align: right;
+}
