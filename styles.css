@@ -7,9 +7,19 @@ html {
     font-family: sans-serif;
 }
 
+a {
+    color: yellowgreen;
+}
+
+a:visited {
+    color: #6532CD;
+}
+
 body {
     width: min(500px, 100%);
     margin: 0;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .discussion {
@@ -17,11 +27,19 @@ body {
     display: flex;
     flex-direction: row;
     background-color: #303030;
-    flex-direction: row;
     padding: 15px 0;
-    text-align: left;
     border-radius: 30px;
     box-shadow: 8.0px 16.0px 16.0px hsl(0deg 0% 0% / 0.25);
+}
+
+.discussion:nth-child(odd) {
+    flex-direction: row;
+    text-align: left;
+}
+
+.discussion:nth-child(even) {
+    flex-direction: row-reverse;
+    text-align: right;
 }
 
 body > .title {
@@ -54,7 +72,32 @@ body > .description {
     margin: 0 25px;
 }
 
-.discussion:nth-child(even) {
-    flex-direction: row-reverse;
-    text-align: right;
+.discussion:nth-child(odd) .description {
+    margin-right: 20px;
+}
+
+.discussion:nth-child(even) .description {
+    margin-left: 20px;
+}
+
+.message {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0px;
+}
+
+.pfp {
+    height: 40px;
+    width: 40px;
+    border-radius: 5px;
+}
+
+.username {
+    font-family: monospace;
+    margin: 0 0;
+    color: lime;
+}
+
+.username + * {
+    margin-top: 0;
 }
