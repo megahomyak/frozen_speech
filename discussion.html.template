@@ -4,20 +4,20 @@ _(f'    <head>')
 _(f'        <meta charset="utf-8">')
 _(f'        <meta name="viewport" content="width=device-width, initial-scale=1">')
 _(f'        <title>Frozen Speech</title>')
-_(f'        <link rel="stylesheet" href="styles.css">')
+_(f'        <link rel="stylesheet" href="../styles.css">')
 _(f'    </head>')
 _(f'    <body>')
 _(f'        <h1 class="title">{discussion.title}</h1>')
-for sender_name, message in discussion.messages:
+for sender_name, message in pairs(discussion.messages):
     _(f'        <div class="message">')
-    _(f'            <img class="pfp" src="profile_pictures/{sender_name}" alt="Profile picture of megahomyak">')
+    _(f'            <img class="pfp" src="../profile_pictures/{sender_name}" alt="Profile picture of megahomyak">')
     _(f'            <div class="contents">')
-    _(f'                <p class="sender-name"><a href="participants/{sender_name}">{sender_name}</a></p>')
-    for part_type, part in message:
+    _(f'                <p class="sender-name"><a href="../participants/{sender_name}">{sender_name}</a></p>')
+    for part_type, part in pairs(message):
         if part_type == "reply":
             _(f'                <p class="metadata">In reply to: {part}</p>')
         if part_type == "image":
-            _(f'                <img src="resources/{discussion.filename}/{part}.png" alt="Attached image">')
+            _(f'                <img src="../resources/{discussion.filename}/{part}" alt="Attached image">')
         if part_type == "text":
             _(f'                <p>{part.replace("\n", "<br>")}</p>')
     _(f'            </div>')

@@ -1,22 +1,22 @@
 import os
-import glob
+import types
+import shutil
+import datetime
 
 path = os.path.join
 
-for file in glob.glob(f"{(compiled_dir:='compiled')}/*.html"):
-    os.remove(file)
-try: os.remove(path(compiled_dir, compiled_index_name:="index.html"))
+try: shutil.rmtree(compiled_discus_dir := path(compiled_dir := "compiled", "discussions"))
 except: pass
+os.mkdir(compiled_discus_dir)
 
-def attrify(listobj):
-    obj = dict(listobj)
-    class A:
-        def __getattr__(self, k): return obj.__getitem__(k)
-        def __setattr__(self, k, v): obj.__setitem__(k, v)
-        def _obj(self): return obj
-    return A()
+def attrs(text):
+    listobj = pairs(text)
+    n = types.SimpleNamespace()
+    for k, v in listobj:
+        setattr(n, k, v)
+    return n
 
-def parse(text):
+def pairs(text):
     items = []
     nestlvl = 0
     name = ""
@@ -39,30 +39,31 @@ def read(*path_parts):
     return open(path(*path_parts), encoding="utf-8").read()
 
 def write(text, *path_parts):
-    return open(path(*path_parts), encoding="utf-8").write(text)
+    return open(path(*path_parts), "w", encoding="utf-8").write(text)
 
 def templated(filepath, args):
     result = ""
     def part(arg, end="\n"):
+        nonlocal result
         result += str(arg) + end
-    locals_ = {"_": part, "attrify": attrify, **args}
+    locals_ = {"_": part, "attrs": attrs, "pairs": pairs, **args}
     exec(read(filepath), {}, locals_)
     return result
 
 def write_templated(inpath, outpath, args):
     result = templated(inpath, args)
-    write(result, compiled_dir, outpath)
+    write(result, outpath)
 
 discussions = []
 for discussion_fname in os.listdir(discussions_dir := "discussions"):
-    discussion = attrify(parse(read(discussions_dir, discussion_fname)))
+    discussion = attrs(read(discussions_dir, discussion_fname))
     participants = set()
     discussion.filename = discussion_fname
-    print(discussion._obj())
-    for sender_name, _ in discussion.messages:
-        assert os.path.exists(path("participants", sender_name))
+    for sender_name, _ in pairs(discussion.messages):
+        assert os.path.exists(path(compiled_dir, "participants", sender_name)), sender_name
         participants.add(sender_name)
     discussion.participants = participants
-    discussions.append(discussions)
-    write_templated("discussion.html.template", {"discussions": discussions}, discussion_fname)
-write_templated("index.html.template", {"discussions": discussions}, compiled_index_name)
+    discussions.append(discussion)
+    write_templated("discussion.html.template", path(compiled_discus_dir, discussion_fname), {"discussion": discussion})
+discussions.sort(key=lambda discussion: datetime.datetime.strptime(discussion.date, "%d.%m.%Y %H:%M:%S"))
+write_templated("index.html.template", path(compiled_dir, "index.html"), {"discussions": discussions})
