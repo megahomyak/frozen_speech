@@ -1,7 +1,7 @@
 import os
 
 def parse(text):
-    items = {}
+    items = []
     nestlvl = 0
     name = ""
     openindex = 0
@@ -13,20 +13,29 @@ def parse(text):
         elif c == ")":
             nestlvl -= 1
             if nestlvl == 0:
-                items[name.strip()] = text[openindex+1:idx]
+                items.append((name.strip(), text[openindex+1:idx]))
                 name = ""
         elif nestlvl == 0:
             name += c
     return items
 
-print(parse("  abc (def ()) ghi ()"))
+def read(*path_parts):
+    import os
+    return open(os.path.join(path_parts)).read()
 
-exit()
+def templated(filepath, args):
+    result = ""
+    def part(arg):
+        result += str(arg)
+    locals_ = {"part": part, **args}
+    exec(read(filepath), {}, locals_)
+    return result
+
+class Template:
+    def __init__(self):
+        self.text = ""
+    def part(self, text):
+        self.text += text
 
 for discussion in os.listdir(discussions := "discussions"):
-    messages = []
-    sender = lambda name: messages.append()
-    line = lambda arg: messages[-1].append("")
-    exec()
-    for line in open(f"{discussions}/{discussion}").read().splitlines():
-        pass
+    discussion = dict(parse(read(discussions, discussion)))
