@@ -1,29 +1,23 @@
-part("""<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Frozen Speech</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <h1 class="title">Frozen Speech</h1>
-        <p class="description"><a href="participants/megahomyak">megahomyak</a>'s useful discussions and monologues, brought from private chats to the public</p>""")
-        <div class="discussion">
-            <p class="emoji">😴</p>
-            <div class="description">
-                <p class="date">69.69.6969</p>
-                <h2 class="title"><a href="discussion.html">Discussion title</a></h2>
-                <p class="participants">Participants: <a href="participants/part1">part1</a>, <a href="participants/part2">part2</a>, <a href="participants/part3">part3</a></p>
-            </div>
-        </div>
-        <div class="discussion">
-            <p class="emoji">🍉</p>
-            <div class="description">
-                <p class="date">69.69.6969</p>
-                <h2 class="title"><a href="discussions/discus">Discussion title</a></h2>
-                <p class="participants">Participants: <a href="participants/part1">part1</a>, <a href="participants/part2">part2</a>, <a href="participants/part3">part3</a></p>
-            </div>
-        </div>
-    </body>
-</html>
+_(f'<!DOCTYPE html>')
+_(f'<html>')
+_(f'    <head>')
+_(f'        <meta charset="utf-8">')
+_(f'        <meta name="viewport" content="width=device-width, initial-scale=1">')
+_(f'        <title>Frozen Speech</title>')
+_(f'        <link rel="stylesheet" href="styles.css">')
+_(f'    </head>')
+_(f'    <body>')
+_(f'        <h1 class="title">Frozen Speech</h1>')
+_(f'        <p class="description"><a href="participants/megahomyak">megahomyak</a>'s useful discussions and monologues, brought from private chats to the public</p>')
+for discussion in discussions:
+    _(f'        <div class="discussion">')
+    _(f'            <p class="emoji">{discussion.emoji}</p>')
+    _(f'            <div class="description">')
+    _(f'                <p class="date">{discussion.date}</p>')
+    _(f'                <h2 class="title"><a href="discussions/{discussion.filename}">{discussion.title}</a></h2>')
+    participants = ", ".join(f'<a href="participants/{participant}">{participant}</a>' for participant in discussion.participants)
+    _(f'                <p class="participants">Participants: {participants}</p>')
+    _(f'            </div>')
+    _(f'        </div>')
+_(f'    </body>')
+_(f'</html>')
