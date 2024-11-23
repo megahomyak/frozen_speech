@@ -8,13 +8,13 @@ for file in glob.glob(f"{(compiled_dir:='compiled')}/*.html"):
 try: os.remove(path(compiled_dir, compiled_index_name:="index.html"))
 except: pass
 
-class Attred:
-    def __init__(self, src):
-        self._src = src
-    def __getattr__(self, name):
-        return self._src[name]
-    def __setattr__(self, name, value):
-        self._src[name] = value
+def attrify(listobj):
+    obj = dict(listobj)
+    class A:
+        def __getattr__(self, k): return obj.__getitem__(k)
+        def __setattr__(self, k, v): obj.__setitem__(k, v)
+        def _obj(self): return obj
+    return A()
 
 def parse(text):
     items = []
@@ -45,7 +45,7 @@ def templated(filepath, args):
     result = ""
     def part(arg, end="\n"):
         result += str(arg) + end
-    locals_ = {"_": part, **args}
+    locals_ = {"_": part, "attrify": attrify, **args}
     exec(read(filepath), {}, locals_)
     return result
 
@@ -55,9 +55,10 @@ def write_templated(inpath, outpath, args):
 
 discussions = []
 for discussion_fname in os.listdir(discussions_dir := "discussions"):
-    discussion = Attred(parse(read(discussions_dir, discussion_fname)))
+    discussion = attrify(parse(read(discussions_dir, discussion_fname)))
     participants = set()
     discussion.filename = discussion_fname
+    print(discussion._obj())
     for sender_name, _ in discussion.messages:
         assert os.path.exists(path("participants", sender_name))
         participants.add(sender_name)
