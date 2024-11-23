@@ -86,6 +86,10 @@ body > .description {
     margin: 15px 0px;
 }
 
+.message .contents {
+    width: 100%;
+}
+
 .pfp {
     height: 40px;
     width: 40px;
@@ -100,4 +104,10 @@ body > .description {
 
 .username + * {
     margin-top: 0;
+}
+
+.message .contents img {
+    width: 100%;
+    max-height: calc(100vh / 1.5);
+    object-fit: contain;
 }
