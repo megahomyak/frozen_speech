@@ -1,1 +1,14 @@
-megahomyak info
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Frozen Speech</title>
+        <link rel="stylesheet" href="../styles.css">
+    </head>
+    <body>
+        <h1 class="title">megahomyak realname</h1>
+        <div class="pfp-centerer"><img class="pfp" src="../profile_pictures/megahomyak" hint="Big profile picture of megahomyak realname"></div>
+        <p>megahomyak description</p>
+    </body>
+</html>

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Frozen Speech</title>
+        <title>My test conversation!</title>
         <link rel="stylesheet" href="../styles.css">
     </head>
     <body>
@@ -11,7 +11,7 @@
         <div class="message">
             <img class="pfp" src="../profile_pictures/megahomyak" alt="Profile picture of megahomyak">
             <div class="contents">
-                <p class="sender-name"><a href="../participants/megahomyak">megahomyak</a></p>
+                <p class="sender-name"><a href="../participants/megahomyak">megahomyak realname</a></p>
                 <p>blahblah</p>
                 <img src="../resources/a/sampleimage.png" alt="Attached image">
             </div>

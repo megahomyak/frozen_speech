@@ -117,3 +117,15 @@ body > .description {
 .message .sender-name + *:not(.metadata) {
     margin-top: 5px;
 }
+
+.pfp-centerer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.pfp-centerer .pfp {
+    height: 120px;
+    width: 120px;
+    border-radius: 15px;
+}

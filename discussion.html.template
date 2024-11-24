@@ -3,16 +3,16 @@ _(f'<html>')
 _(f'    <head>')
 _(f'        <meta charset="utf-8">')
 _(f'        <meta name="viewport" content="width=device-width, initial-scale=1">')
-_(f'        <title>Frozen Speech</title>')
+_(f'        <title>{discussion.title}</title>')
 _(f'        <link rel="stylesheet" href="../styles.css">')
 _(f'    </head>')
 _(f'    <body>')
 _(f'        <h1 class="title">{discussion.title}</h1>')
-for sender_name, message in pairs(discussion.messages):
+for participant_filename, message in pairs(discussion.messages):
     _(f'        <div class="message">')
-    _(f'            <img class="pfp" src="../profile_pictures/{sender_name}" alt="Profile picture of megahomyak">')
+    _(f'            <img class="pfp" src="../profile_pictures/{participant_filename}" alt="Profile picture of megahomyak">')
     _(f'            <div class="contents">')
-    _(f'                <p class="sender-name"><a href="../participants/{sender_name}">{sender_name}</a></p>')
+    _(f'                <p class="sender-name"><a href="../participants/{participant_filename}">{get_participant(participant_filename).name}</a></p>')
     for part_type, part in pairs(message):
         if part_type == "reply":
             _(f'                <p class="metadata">In reply to: {part}</p>')
