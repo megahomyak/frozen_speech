@@ -1,0 +1,13 @@
+services:
+  server:
+    build:
+      target: production
+      context: .
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "4m"
+        max-file: "5"
+    ports:
+      - "8006:80"
+    restart: unless-stopped
