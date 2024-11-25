@@ -9,5 +9,5 @@ services:
         max-size: "4m"
         max-file: "5"
     ports:
-      - "8006:80"
+      - "8009:80"
     restart: unless-stopped
