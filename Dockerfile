@@ -10,6 +10,6 @@ CMD ["httpd", "-f"]
 STOPSIGNAL SIGKILL
 
 FROM build-env AS production
-COPY --from=compiler contents/compiled .
+COPY --from=compiler /app/compiled .
 
 FROM build-env AS development
