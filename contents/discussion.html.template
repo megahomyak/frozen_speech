@@ -13,12 +13,17 @@ for participant_filename, message in pairs(discussion.messages):
     _(f'            <img class="pfp" src="../profile_pictures/{participant_filename}" alt="Profile picture of megahomyak">')
     _(f'            <div class="contents">')
     _(f'                <p class="sender-name"><a href="../participants/{participant_filename}">{get_participant(participant_filename).name}</a></p>')
+    seen_messages = []
     for part_type, part in pairs(message):
         if part_type == "reply":
-            _(f'                <p class="metadata">In reply to: {part}</p>')
+            assert any(part in message for message in seen_messages)
+            _(f'                <p class="metadata">In reply to: "{part}"</p>')
         if part_type == "image":
+            seen_messages.append(part)
+            assert_exists("compiled", "resources", discussion.filename, part)
             _(f'                <img src="../resources/{discussion.filename}/{part}" alt="Attached image">')
         if part_type == "text":
+            seen_messages.append(part)
             _(f'                <p>{part.replace("\n", "<br>")}</p>')
     _(f'            </div>')
     _(f'        </div>')

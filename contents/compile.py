@@ -56,7 +56,9 @@ def templated(filepath, args):
     def part(arg, end="\n"):
         nonlocal result
         result += str(arg) + end
-    locals_ = {"_": part, "attrs": attrs, "pairs": pairs, **args}
+    def assert_exists(*path_parts):
+        assert os.path.exists(path(*path_parts))
+    locals_ = {"_": part, "attrs": attrs, "pairs": pairs, "get_participant": get_participant, "assert_exists": assert_exists, **args}
     exec(read(filepath), locals_, locals_)
     return result
 
@@ -81,6 +83,6 @@ for discussion_fname in os.listdir(discussions_dir := "discussions"):
         participants.add(sender_name)
     discussion.participants = participants
     discussions.append(discussion)
-    write_templated("discussion.html.template", path(compiled_discus_dir, discussion_fname), {"discussion": discussion, "get_participant": get_participant})
+    write_templated("discussion.html.template", path(compiled_discus_dir, discussion_fname), {"discussion": discussion})
 discussions.sort(key=lambda discussion: datetime.datetime.strptime(discussion.date, "%d.%m.%Y %H:%M:%S"), reverse=True)
-write_templated("index.html.template", path(compiled_dir, "index.html"), {"discussions": discussions, "get_participant": get_participant})
+write_templated("index.html.template", path(compiled_dir, "index.html"), {"discussions": discussions})
