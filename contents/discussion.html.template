@@ -1,3 +1,5 @@
+import html
+
 _(f'<!DOCTYPE html>')
 _(f'<html>')
 _(f'    <head>')
@@ -24,7 +26,7 @@ for participant_filename, message in pairs(discussion.messages):
             _(f'                <img src="../resources/{discussion.filename}/{part}" alt="Attached image">')
         if part_type == "text":
             seen_messages.append(part)
-            _(f'                <p>{part.replace("\n", "<br>")}</p>')
+            _(f'                <p>{html.escape(part).replace("\n", "<br>")}</p>')
     _(f'            </div>')
     _(f'        </div>')
 _(f'            </div>')
