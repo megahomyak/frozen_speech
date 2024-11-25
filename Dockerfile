@@ -1,6 +1,6 @@
 FROM alpine:3.20.3 AS compiler
 WORKDIR /app
-RUN apk add --no-cache python3=3.12.3
+RUN apk add --no-cache python3=3.12.7-r0
 COPY contents .
 RUN python -B compile.py
 
