@@ -61,7 +61,7 @@ body > .description {
     margin: 0;
 }
 
-.discussion .date {
+.discussion .moment {
     color: #8F8F8F;
     font-size: 0.8em;
     margin: 0;
@@ -128,4 +128,31 @@ body > .description {
     height: 120px;
     width: 120px;
     border-radius: 15px;
+}
+
+.explanation {
+    color: #8F8F8F;
+}
+
+/* Stolen from https://stackoverflow.com/a/26634224 */
+.cut {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.cut::before,
+.cut::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #E6E6E6;
+}
+.cut::before {
+  margin-right: .25em;
+}
+.cut::after {
+  margin-left: .25em;
+}
+
+.codeblock {
+    display: block;
 }

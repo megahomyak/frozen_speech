@@ -13,7 +13,7 @@ for discussion in discussions:
     _(f'        <div class="discussion">')
     _(f'            <p class="emoji">{discussion.emoji}</p>')
     _(f'            <div class="description">')
-    _(f'                <p class="date">{discussion.date}</p>')
+    _(f'                <p class="moment">{discussion.moment}</p>')
     _(f'                <h2 class="title"><a href="discussions/{discussion.filename}">{discussion.title}</a></h2>')
     participants = ", ".join(f'<a href="participants/{participant}">{get_participant(participant).name}</a>' for participant in discussion.participants)
     _(f'                <p class="participants">Participants: {participants}</p>')

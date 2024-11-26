@@ -7,8 +7,8 @@
         <link rel="stylesheet" href="../styles.css">
     </head>
     <body>
-        <h1 class="title">megahomyak realname</h1>
-        <div class="pfp-centerer"><img class="pfp" src="../profile_pictures/megahomyak" hint="Big profile picture of megahomyak realname"></div>
-        <p>megahomyak description</p>
+        <h1 class="title">megahomyak</h1>
+        <div class="pfp-centerer"><img class="pfp" src="../profile_pictures/megahomyak" hint="Big profile picture of megahomyak"></div>
+        <p>The owner of this website. A creative individual with mild cognitive impairments. Anxious, hence very thoughtful.</p>
     </body>
 </html>
