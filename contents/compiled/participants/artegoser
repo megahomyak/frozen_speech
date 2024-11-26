@@ -9,6 +9,6 @@
     <body>
         <h1 class="title">artegoser</h1>
         <div class="pfp-centerer"><img class="pfp" src="../profile_pictures/artegoser" hint="Big profile picture of artegoser"></div>
-        <p>A member of one chat where megahomyak resides. Prefers lightweight talk.</p>
+        <p>A friend of megahomyak. <a href="https://github.com/artegoser">Github</a></p>
     </body>
 </html>
