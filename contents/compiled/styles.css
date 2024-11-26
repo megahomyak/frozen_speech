@@ -98,8 +98,6 @@ body > .description {
 
 .sender-name {
     font-family: monospace;
-    margin: 0;
-    color: lime;
 }
 
 .message .contents img {
@@ -114,7 +112,7 @@ body > .description {
     margin-left: 10px;
 }
 
-.message .sender-name + *:not(.metadata) {
+.message .header + *:not(.metadata) {
     margin-top: 5px;
 }
 
@@ -155,4 +153,14 @@ body > .description {
 
 .codeblock {
     display: block;
+}
+
+.message .header {
+    margin: 0;
+}
+
+.message .header .moment {
+    font-size: 0.8em;
+    color: #8F8F8F;
+    margin-left: 5px;
 }

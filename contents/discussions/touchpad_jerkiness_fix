@@ -1,50 +1,79 @@
 title(Touchpad jerkiness fix)
 emoji(💻)
-messages(
-megahomyak(
+contents(
+message(
+sender(megahomyak)
 moment(17.11.2024 23:47)
+contents(
 text(My touchpad suddenly decided to go crazy and randomly change the sensitivity)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(17.11.2024 23:47)
+contents(
 reply(and randomly change the sensitivity)
 text(And remove my double tap)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(17.11.2024 23:47)
+contents(
 text(And that's without a graphics tablet. And after I re-enter the X session. I'll go reboot entirely)
 )
-/cut()
-megahomyak(
-moment(22.11.2024 11:03)
-text(My multitouch is dead again and the touchpad started to apply random speed to my actions on it. I've rebooted the hardware component already, I don't want to restart the X session because a lot of stuff will be reset. What can I do to fix this? I've already tried to turn it on and off in xinput)
 )
-megahomyak(
+cut()
+message(
+sender(megahomyak)
+moment(22.11.2024 11:03)
+contents(
+text(My multitouch is dead again and the touchpad started to apply random speed to my actions on it. I've rebooted the hardware component already, I don't want to restart the X session because a lot of stuff will be killed. What can I do to fix this? I've already tried to turn it on and off in xinput)
+)
+)
+message(
+sender(megahomyak)
 moment(22.11.2024 11:15)
+contents(
 reply(My multitouch is dead again and the touchpad started to apply random speed to my actions on it)
 text(Only full reboot has saved me. Do you have any ideas?)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(22.11.2024 11:15)
+contents(
 reply(Only full reboot has saved me. Do you have any ideas?)
 text(This shit happens, I think, after I plug in my graphics tablet)
 )
-artegoser(
+)
+message(
+sender(artegoser)
 moment(22.11.2024 11:16)
+contents(
 reply(This shit happens, I think, after I plug in my graphics tablet)
 text(Idea: don't plug it in)
 )
-artegoser(
+)
+message(
+sender(artegoser)
 moment(22.11.2024 11:17)
+contents(
 text(And check)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(22.11.2024 11:24)
+contents(
 reply(And check)
 text(It's too chaotic. I would like to do that, of course, but it only happens once per few days)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(22.11.2024 11:27)
+contents(
 text(My setup:
 * Laptop on the table
 * Phone near the touchpad
@@ -54,57 +83,88 @@ text(My setup:
 My setup when I try to debug this:
 * All devices are far away from each other)
 )
-/cut()
-megahomyak(
+)
+cut()
+message(
+sender(megahomyak)
 moment(23.11.2024 12:17)
+contents(
 text(And my touchpad is going crazy again)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:17)
+contents(
 text(I'll have to fix it to not break the test)
 explanation(I've been running a network test at the moment and couldn't just reboot my machine)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:18)
+contents(
 text(It is 100% a software issue, there was no such shit before)
 explanation(I've recently installed a different Linux distribution onto my machine)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:18)
+contents(
 text(And that, I assume, is after I bring my phone near the touchpad...)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:43)
+contents(
 reply(And my touchpad is going crazy again)
 text(Fixed?)
 code(sudo modprobe hid_multitouch)
 explanation(Of course, you'd need to remove the module with `modprobe -r` first)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:43)
+contents(
 reply(sudo modprobe hid_multitouch)
 text(But that's only for multitouch...
 
 The touchpad still feels wonky)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:48)
+contents(
 reply(sudo modprobe hid_multitouch)
 text(Here are more modules that can be useful (a restart of them can be useful): i2c_hid_acpi, i2c_hid, usbhid, hid_multitouch, hid_generic)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:48)
+contents(
 reply(Here are more modules that can be useful)
 text(A restart of psmouse did not help, even though it helped some other people)
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:49)
+contents(
 reply(A restart of psmouse did not help, even though it helped some other people)
 text(Many thanks to that only answer on SO that mentioned hid_multitouch)
 explanation("SO" = "Stack Overflow")
 )
-megahomyak(
+)
+message(
+sender(megahomyak)
 moment(23.11.2024 12:49)
+contents(
 text(The mouse is now not jerky, but feels like it's in jelly. Too not jerky)
+)
 )
 )

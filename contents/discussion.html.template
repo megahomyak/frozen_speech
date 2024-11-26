@@ -11,44 +11,37 @@ _(f'    </head>')
 _(f'    <body>')
 _(f'        <h1 class="title">{discussion.title}</h1>')
 seen_messages = []
-for participant_filename, message in pairs(discussion.messages):
-    if participant_filename.startswith("/"):
-        if participant_filename == "/cut":
-            _(f'                <div class="cut">Cut</div>')
-        else:
-            raise Exception(f"Unknown 'special' type {part_type}")
-        continue
-    _(f'        <div class="message">')
-    assert_exists("compiled", "profile_pictures", participant_filename)
-    _(f'            <img class="pfp" src="../profile_pictures/{participant_filename}" alt="Profile picture of {get_participant(participant_filename).name}">')
-    _(f'            <div class="contents">')
-    _(f'                <p class="sender-name"><a href="../participants/{participant_filename}">{get_participant(participant_filename).name}</a></p>')
-    moment_provided = False
-    for part_type, part in pairs(message):
-        if part_type == "moment":
-            _(f'                <p class="metadata">Moment: {part}</p>')
-            moment_provided = True
-        elif part_type == "explanation":
-            _(f'                <p class="explanation">Explanation: {part}</p>')
-        elif part_type == "reply":
-            assert any(part in message for message in seen_messages), part
-            _(f'                <p class="metadata">In reply to: "{part}"</p>')
-        elif part_type == "image":
-            seen_messages.append(part)
-            assert_exists("compiled", "resources", discussion.filename, part), (discussion.filename, part)
-            _(f'                <img src="../resources/{discussion.filename}/{part}" alt="Attached image">')
-        elif part_type == "text":
-            seen_messages.append(part)
-            _(f'                <p>{html.escape(part).replace("\n", "<br>")}</p>')
-        elif part_type == "code":
-            seen_messages.append(part)
-            _(f'                <code class="codeblock">{html.escape(part).replace("\n", "<br>")}</code>')
-        else:
-            raise Exception(f"Unknown part type {part_type}")
-    assert moment_provided, discussion.title
-    _(f'            </div>')
-    _(f'        </div>')
-_(f'            </div>')
-_(f'        </div>')
+for command, argument in pairs(discussion.contents):
+    if command == "cut":
+        _(f'        <div class="cut">Cut</div>')
+    elif command == "message":
+        participant_filename = attrs(argument).sender
+        _(f'        <div class="message">')
+        assert_exists("compiled", "profile_pictures", participant_filename)
+        _(f'            <img class="pfp" src="../profile_pictures/{participant_filename}" alt="Profile picture of {get_participant(participant_filename).name}">')
+        _(f'            <div class="contents">')
+        _(f'                <p class="header"><a class="sender-name" href="../participants/{participant_filename}">{get_participant(participant_filename).name}</a><span class="moment">{attrs(argument).moment}</span></p>')
+        for part_type, part in pairs(attrs(argument).contents):
+            if part_type == "explanation":
+                _(f'                <p class="explanation">Explanation: {part}</p>')
+            elif part_type == "reply":
+                assert any(part in message for message in seen_messages), part
+                _(f'                <p class="metadata">In reply to: "{part}"</p>')
+            elif part_type == "image":
+                seen_messages.append(part)
+                assert_exists("compiled", "resources", discussion.filename, part), (discussion.filename, part)
+                _(f'                <img src="../resources/{discussion.filename}/{part}" alt="Attached image">')
+            elif part_type == "text":
+                seen_messages.append(part)
+                _(f'                <p>{html.escape(part).replace("\n", "<br>")}</p>')
+            elif part_type == "code":
+                seen_messages.append(part)
+                _(f'                <code class="codeblock">{html.escape(part).replace("\n", "<br>")}</code>')
+            else:
+                raise Exception(f"Unknown part type {part_type}")
+        _(f'            </div>')
+        _(f'        </div>')
+    else:
+        raise Exception(f"Unknown command type: {command}")
 _(f'    </body>')
 _(f'</html>')

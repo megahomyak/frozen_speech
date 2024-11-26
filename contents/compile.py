@@ -88,13 +88,10 @@ for discussion_fname in os.listdir(discussions_dir := "discussions"):
     participants = set()
     discussion.filename = discussion_fname
     moments = []
-    for sender_name, message in pairs(discussion.messages):
-        if sender_name.startswith("/"):
-            continue
-        participants.add(sender_name)
-        for part_type, part in pairs(message):
-            if part_type == "moment":
-                moments.append(datetime.datetime.strptime(part, "%d.%m.%Y %H:%M"))
+    for command, argument in pairs(discussion.contents):
+        if command == "message":
+            participants.add(attrs(argument).sender)
+            moments.append(datetime.datetime.strptime(attrs(argument).moment, "%d.%m.%Y %H:%M"))
     discussion.moment = max(moments)
     discussion.participants = participants
     discussions.append(discussion)
