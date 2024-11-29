@@ -9,6 +9,6 @@
     <body>
         <h1 class="title">megahomyak</h1>
         <div class="pfp-centerer"><img class="pfp" src="../profile_pictures/megahomyak" hint="Big profile picture of megahomyak"></div>
-        <p>The owner of this website. Cognitively impaired. Anxious.</p>
+        <p>The owner of this website. Cognitively impaired. Anxious. <a href="https://github.com/megahomyak">Github</a>, <a href="https://t.me/megahomyak">Telegram</a></p>
     </body>
 </html>
