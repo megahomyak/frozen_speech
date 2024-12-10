@@ -1,0 +1,54 @@
+title(Megahomyak prefers boxed software)
+emoji(📦)
+contents(
+message(
+sender(megahomyak)
+moment(10.12.2024 05:40)
+contents(
+text(Let's imagine that software is a box within a box)
+image(boxes_empty)
+)
+)
+message(
+sender(megahomyak)
+moment(10.12.2024 05:41)
+contents(
+reply(Let's imagine that software is a box within a box)
+text(I want all parameters in software to be transmitted like this)
+image(boxes_nested_transmission)
+)
+)
+message(
+sender(megahomyak)
+moment(10.12.2024 05:41)
+contents(
+reply(I want all parameters in software to be transmitted like this)
+text(Not like this)
+image(boxes_direct_transmission)
+)
+)
+message(
+sender(megahomyak)
+moment(10.12.2024 05:41)
+contents(
+reply(I want all parameters in software to be transmitted like this)
+text(If we will have such containerisation, we will actually have the ability to control "subordinate" programs)
+)
+)
+message(
+sender(megahomyak)
+moment(10.12.2024 05:41)
+contents(
+reply(If we will have such containerisation, we will actually have)
+text(But if we will have it like on the image below, then we will be approximately where we are now, with dependency conflicts and shitting into a global filesystem, and to remedy that, we use Docker and various black magic)
+)
+)
+message(
+sender(megahomyak)
+moment(10.12.2024 05:41)
+contents(
+reply(But if we will have it like on the image below)
+text(And I don't want all that. I want boxed software, where all the handles for shitting outside of the box could be passed in through the external program that runs the current program. That is to be able to mock any interface that the internal program uses, and some interfaces might not be given to it at all if that's needed)
+)
+)
+)
