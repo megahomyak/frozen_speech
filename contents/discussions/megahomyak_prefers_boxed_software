@@ -14,7 +14,7 @@ sender(megahomyak)
 moment(10.12.2024 05:41)
 contents(
 reply(Let's imagine that software is a box within a box)
-text(I want all parameters in software to be transmitted like this)
+text(I want all parameters in software to be transmitted like this:)
 image(boxes_nested_transmission)
 )
 )
@@ -22,8 +22,8 @@ message(
 sender(megahomyak)
 moment(10.12.2024 05:41)
 contents(
-reply(I want all parameters in software to be transmitted like this)
-text(Not like this)
+reply(I want all parameters in software to be transmitted like this:)
+text(Not like this:)
 image(boxes_direct_transmission)
 )
 )
@@ -31,7 +31,7 @@ message(
 sender(megahomyak)
 moment(10.12.2024 05:41)
 contents(
-reply(I want all parameters in software to be transmitted like this)
+reply(I want all parameters in software to be transmitted like this:)
 text(If we will have such containerisation, we will actually have the ability to control "subordinate" programs)
 )
 )
