@@ -52,18 +52,20 @@ index:
 discussion:
     body (not centered) {
         title (centered) {}
-        message (repeating) {
-            heading (horizontal container) {
-                pfp {}
-                username {}
-                moment {}
-                reply to id (if present) {}
-                id (if present) {}
-            }
-            contents (slightly shifted to right) {
-                SWITCH part {
-                    image => img,
-                    text => <pre>text</pre>,
+        message (repeating; horizontal container) {
+            pfp {}
+            content (vertical container) {
+                metadata (horizontal container) {
+                    username span {}
+                    moment span {}
+                    reply to id span (if present) {}
+                    id span (if present) {}
+                }
+                parts (vertical container) {
+                    SWITCH part {
+                        image => img,
+                        text => <pre>text</pre>,
+                    }
                 }
             }
         }

@@ -112,14 +112,17 @@ impl HTML {
     }
     fn full_tag<'a>(
         mut self,
-        name: &str,
-        attrs: impl IntoIterator<Item = (&'a str, &'a str)>,
+        name: &'static str,
+        attrs: impl IntoIterator<Item = (&'static str, &'a str)>,
         contents: impl FnOnce(Self) -> Self,
     ) -> Self {
         self.content.push_str(&format!("<{}", name));
         for attr in attrs.into_iter() {
-            self.content
-                .push_str(&format!(" {}=\"{}\"", attr.0, attr.1));
+            self.content.push_str(&format!(
+                " {}=\"{}\"",
+                attr.0,
+                html_escape::encode_double_quoted_attribute(attr.1)
+            ));
         }
         self.content.push_str(&format!(">"));
         self = contents(self);
@@ -128,13 +131,16 @@ impl HTML {
     }
     fn open_tag<'a>(
         mut self,
-        name: &str,
-        attrs: impl IntoIterator<Item = (&'a str, &'a str)>,
+        name: &'static str,
+        attrs: impl IntoIterator<Item = (&'static str, &'a str)>,
     ) -> Self {
         self.content.push_str(&format!("<{}", name));
         for attr in attrs.into_iter() {
-            self.content
-                .push_str(&format!(" {}=\"{}\"", attr.0, attr.1));
+            self.content.push_str(&format!(
+                " {}=\"{}\"",
+                attr.0,
+                html_escape::encode_double_quoted_attribute(attr.1)
+            ));
         }
         self.content.push_str(&format!(">"));
         self
@@ -185,7 +191,7 @@ fn make_participant_html(participant_name: &str) -> String {
     let links_path = format!("participants/{}/links", participant_name);
     let links = std::fs::read_to_string(links_path).unwrap();
     make_html(participant_name, "../../participant.css", |d| {
-        d.full_tag("h1", [("class", "title")], |d| d.text(participant_name))
+        d.full_tag("h1", [], |d| d.text(participant_name))
             .open_tag(
                 "img",
                 [
@@ -207,8 +213,99 @@ fn make_participant_html(participant_name: &str) -> String {
     })
 }
 
-fn make_discussion_html(discussion: &Discussion) -> String {
-    make_html(&discussion.title, "../../discussion.css", |d| d.full_tag("h1", [("class", "title")], |d| d.text(&discussion.title)).iter(&discussion.messages, |d, message| message.))
+fn make_discussion_html(discussion: &FullDiscussion) -> String {
+    make_html(&discussion.inner.title, "../../discussion.css", |d| {
+        d.full_tag("h1", [], |d| d.text(&discussion.inner.title))
+            .iter(&discussion.inner.messages, |d, message| {
+                d.full_tag("div", [("class", "message")], |d| {
+                    d.open_tag(
+                        "img",
+                        [
+                            ("class", "pfp"),
+                            (
+                                "src",
+                                &format!("../../participants/{}/pfp", message.author_name)[..],
+                            ),
+                            (
+                                "alt",
+                                &format!("Profile picture of {}", message.author_name)[..],
+                            ),
+                        ],
+                    )
+                    .full_tag(
+                        "div",
+                        {
+                            let mut attrs = Vec::from([("class", "content")]);
+                            if let Some(ref id) = message.id {
+                                attrs.push(("id", id));
+                            }
+                            attrs
+                        },
+                        |d| {
+                            d.full_tag("div", [("class", "metadata")], |d| {
+                                d.full_tag("span", [("class", "username")], |d| {
+                                    d.full_tag(
+                                        "a",
+                                        [(
+                                            "href",
+                                            &format!("../../participants/{}/", message.author_name)
+                                                [..],
+                                        )],
+                                        |d| d.text(&message.author_name),
+                                    )
+                                })
+                                .full_tag("span", [("class", "moment")], |d| {
+                                    d.text(&message.moment.format(&MOMENT_FORMAT).unwrap())
+                                })
+                                .option(&message.reply_to_id, |d, reply_to_id| {
+                                    let reply_to_id = format!("#{}", reply_to_id);
+                                    d.full_tag("span", [("class", "reply_to_id_span")], |d| {
+                                        d.text(&format!("reply to id: ")[..]).full_tag(
+                                            "a",
+                                            [("class", "reply_to_id_a"), ("href", &reply_to_id)],
+                                            |d| d.text(&reply_to_id),
+                                        )
+                                    })
+                                })
+                                .option(&message.id, |d, id| {
+                                    d.full_tag("span", [("class", "id")], |d| {
+                                        d.text(&format!("#{}", id))
+                                    })
+                                })
+                            })
+                            .full_tag(
+                                "div",
+                                [("class", "parts")],
+                                |d| {
+                                    d.iter(&message.parts, |d, part| match part {
+                                        MessagePart::Image(file_name) => d.open_tag(
+                                            "img",
+                                            [
+                                                ("class", "image_part"),
+                                                ("src", file_name),
+                                                (
+                                                    "alt",
+                                                    &std::fs::read_to_string(format!(
+                                                        "discussions/{}/{}.description",
+                                                        discussion.directory_name, file_name
+                                                    ))
+                                                    .unwrap(),
+                                                ),
+                                            ],
+                                        ),
+                                        MessagePart::Text(text) => {
+                                            d.full_tag("pre", [("class", "text_part")], |d| {
+                                                d.text(text)
+                                            })
+                                        }
+                                    })
+                                },
+                            )
+                        },
+                    )
+                })
+            })
+    })
 }
 
 struct DiscussionShort {
@@ -253,59 +350,43 @@ fn make_index_html(
     next: &Option<String>,
 ) -> String {
     make_html("Frozen Speech", "index.css", |d| {
-        d.full_tag("h1", [("class", "title")], |d| d.text("Frozen Speech"))
-            .full_tag("p", [("class", "description")], |d| {
-                d.full_tag("a", [("href", "participants/megahomyak")], |d| {
+        d.full_tag("h1", [], |d| d.text("Frozen Speech"))
+            .full_tag("p", [("class", "subtitle")], |d| {
+                d.full_tag("a", [("href", "participants/megahomyak/")], |d| {
                     d.text("megahomyak")
                 })
                 .text("'s valuable discussions archive")
             })
             .iter(chunk, |d, short| {
                 d.full_tag("div", [("class", "discussion")], |d| {
-                    d.full_tag("span", [("class", "emoji")], |d| d.text(&short.emoji))
-                        .full_tag("div", [("class", "description")], |d| {
-                            d.full_tag("p", [("class", "description")], |d| {
-                                d.text(&short.moment.format(&MOMENT_FORMAT).unwrap())
-                            })
-                            .full_tag("h2", [("class", "title")], |d| {
-                                d.full_tag(
-                                    "a",
-                                    [(
-                                        "href",
-                                        &format!("discussions/{}", short.directory_name)[..],
-                                    )],
-                                    |d| d.text(&short.title),
-                                )
-                            })
-                            .full_tag(
-                                "p",
-                                [("class", "participants")],
-                                |d| {
-                                    d.text("Participants: ").html(
-                                        &short
-                                            .participants
-                                            .iter()
-                                            .map(|participant| {
-                                                HTML::new()
-                                                    .full_tag(
-                                                        "a",
-                                                        [(
-                                                            "href",
-                                                            &format!(
-                                                                "participants/{}",
-                                                                participant
-                                                            )[..],
-                                                        )],
-                                                        |d| d.text(participant),
-                                                    )
-                                                    .content
-                                            })
-                                            .collect::<Vec<_>>()
-                                            .join("\n"),
-                                    )
-                                },
-                            )
-                        })
+                    d.full_tag("h2", [], |d| {
+                        d.full_tag("span", [("class", "emoji")], |d| d.text(&short.emoji))
+                            .full_tag("span", [("class", "title_text")], |d| d.text(&short.title))
+                    })
+                    .full_tag("p", [("class", "moment")], |d| {
+                        d.text(&short.moment.format(&MOMENT_FORMAT).unwrap())
+                    })
+                    .full_tag("p", [("class", "participants")], |d| {
+                        d.text("Participants: ").html(
+                            &short
+                                .participants
+                                .iter()
+                                .map(|participant| {
+                                    HTML::new()
+                                        .full_tag(
+                                            "a",
+                                            [(
+                                                "href",
+                                                &format!("participants/{}/", participant)[..],
+                                            )],
+                                            |d| d.text(participant),
+                                        )
+                                        .content
+                                })
+                                .collect::<Vec<_>>()
+                                .join("\n"),
+                        )
+                    })
                 })
             })
             .full_tag("div", [("class", "navigation")], |d| {
@@ -332,11 +413,12 @@ fn main() {
         let contents_path = discussion_dir_path.join("contents");
         let contents = std::fs::read_to_string(contents_path).unwrap();
         let discussion = parse(contents.lines());
-        let discussion_html = make_discussion_html(&discussion);
-        discussions.push(FullDiscussion {
+        let full_discussion = FullDiscussion {
             inner: discussion,
             directory_name: discussion_dir.file_name().to_str().unwrap().to_owned(),
-        });
+        };
+        let discussion_html = make_discussion_html(&full_discussion);
+        discussions.push(full_discussion);
         std::fs::write(discussion_dir_path.join("index.html"), &discussion_html).unwrap();
     }
     let shorts = make_shorts(discussions);
