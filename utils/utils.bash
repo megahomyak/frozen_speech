@@ -36,3 +36,7 @@ fs-dsc() {
     cd "$NAME"
     nvim content
 }
+_fs-dsc() {
+    COMPREPLY=( $( ls contents/discussions | grep "^$2" ) );
+}
+complete -F _fs-dsc fs-dsc
