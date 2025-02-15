@@ -1,4 +1,4 @@
-fs-change-usr-links() (
+fs-relink-usr() (
     set -e
     while ! [ -d participants ]; do
         cd ..
@@ -9,7 +9,7 @@ fs-change-usr-links() (
     nvim links
 )
 
-fs-new-usr() (
+fs-usr() (
     set -e
     while ! [ -d participants ]; do
         cd ..
@@ -29,7 +29,7 @@ fs-img() (
     ls | grep --color=never "^$FILE_NAME\."
 )
 
-fs-new-dsc() {
+fs-dsc() {
     cd contents/discussions
     read -p 'Name: ' NAME
     mkdir -p "$NAME"
