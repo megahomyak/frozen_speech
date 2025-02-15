@@ -13,7 +13,7 @@ ssh -F $SSH_CONFIG_PATH -i $SSH_KEY_PATH $HOST << EOF2
 docker rm --force frozen_speech
 cd frozen_speech
 docker load -i frozen_speech.tar
-docker run -d -p 8011:80 --name frozen_speech --restart unless-stopped frozen_speech
+docker run -d -p 8009:80 --name frozen_speech --restart unless-stopped frozen_speech
 EOF2
 docker image rm frozen_speech
 EOF
