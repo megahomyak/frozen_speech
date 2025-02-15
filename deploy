@@ -2,8 +2,8 @@
 SSH_KEY_PATH=~/.ssh/id_rsa
 SSH_CONFIG_PATH=~/.ssh/config
 HOST="orange"
-(cd new && cargo build)
-(cd new_contents && ~/rustc_target/debug/frozen_speech)
+cargo build
+(cd contents && ~/rustc_target/debug/frozen_speech)
 sudo bash -e << EOF
 docker build --progress=plain . -t frozen_speech
 docker save frozen_speech -o frozen_speech.tar
