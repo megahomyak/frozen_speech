@@ -4,3 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+html-escape = "0.2.13"
+time = { version = "0.3.37", features = ["formatting", "macros", "parsing"] }
