@@ -29,10 +29,10 @@ fs-img() (
     ls | grep --color=never "^$FILE_NAME\."
 )
 
-fs-new-dsc() (
+fs-new-dsc() {
     cd contents/discussions
     read -p 'Name: ' NAME
-    mkdir "$NAME"
+    mkdir -p "$NAME"
     cd "$NAME"
     nvim content
-)
+}
