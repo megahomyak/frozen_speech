@@ -28,3 +28,11 @@ fs-img() (
     python -m cbsave -e "$FILE_NAME"
     ls | grep --color=never "^$FILE_NAME\."
 )
+
+fs-new-dsc() (
+    cd contents/discussions
+    read -p 'Name: ' NAME
+    mkdir "$NAME"
+    cd "$NAME"
+    nvim content
+)
