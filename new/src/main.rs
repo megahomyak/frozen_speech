@@ -107,7 +107,7 @@ struct HTML {
 impl HTML {
     fn new() -> Self {
         Self {
-            content: String::from("<!DOCTYPE html>"),
+            content: String::new(),
         }
     }
     fn full_tag<'a>(
@@ -167,8 +167,9 @@ impl HTML {
     }
 }
 
-fn make_html(title: &str, styles: &str, body: impl FnOnce(HTML) -> HTML) -> String {
+fn make_html_document(title: &str, styles: &str, body: impl FnOnce(HTML) -> HTML) -> String {
     HTML::new()
+        .html("<!DOCTYPE html>")
         .full_tag("html", [], |d| {
             d.full_tag("head", [], |d| {
                 d.open_tag("meta", [("charset", "utf-8")])
@@ -190,7 +191,7 @@ fn make_html(title: &str, styles: &str, body: impl FnOnce(HTML) -> HTML) -> Stri
 fn make_participant_html(participant_name: &str) -> String {
     let links_path = format!("participants/{}/links", participant_name);
     let links = std::fs::read_to_string(links_path).unwrap();
-    make_html(participant_name, "../../participant.css", |d| {
+    make_html_document(participant_name, "../../participant.css", |d| {
         d.full_tag("h1", [], |d| d.text(participant_name))
             .open_tag(
                 "img",
@@ -214,7 +215,7 @@ fn make_participant_html(participant_name: &str) -> String {
 }
 
 fn make_discussion_html(discussion: &FullDiscussion) -> String {
-    make_html(&discussion.inner.title, "../../discussion.css", |d| {
+    make_html_document(&discussion.inner.title, "../../discussion.css", |d| {
         d.full_tag("h1", [], |d| d.text(&discussion.inner.title))
             .iter(&discussion.inner.messages, |d, message| {
                 d.full_tag("div", [("class", "message")], |d| {
@@ -349,7 +350,7 @@ fn make_index_html(
     prev: &Option<String>,
     next: &Option<String>,
 ) -> String {
-    make_html("Frozen Speech", "index.css", |d| {
+    make_html_document("Frozen Speech", "index.css", |d| {
         d.full_tag("h1", [], |d| d.text("Frozen Speech"))
             .full_tag("p", [("class", "subtitle")], |d| {
                 d.full_tag("a", [("href", "participants/megahomyak/")], |d| {
@@ -361,7 +362,16 @@ fn make_index_html(
                 d.full_tag("div", [("class", "discussion")], |d| {
                     d.full_tag("h2", [], |d| {
                         d.full_tag("span", [("class", "emoji")], |d| d.text(&short.emoji))
-                            .full_tag("span", [("class", "title_text")], |d| d.text(&short.title))
+                            .full_tag("span", [("class", "title_text")], |d| {
+                                d.full_tag(
+                                    "a",
+                                    [(
+                                        "href",
+                                        &format!("discussions/{}/", short.directory_name)[..],
+                                    )],
+                                    |d| d.text(&short.title),
+                                )
+                            })
                     })
                     .full_tag("p", [("class", "moment")], |d| {
                         d.text(&short.moment.format(&MOMENT_FORMAT).unwrap())
@@ -401,7 +411,7 @@ fn make_index_html(
 }
 
 fn main() {
-    for participant_dir in std::fs::read_dir("discussions").unwrap() {
+    for participant_dir in std::fs::read_dir("participants").unwrap() {
         let participant_dir = participant_dir.unwrap();
         let participant_html = make_participant_html(participant_dir.file_name().to_str().unwrap());
         std::fs::write(participant_dir.path().join("index.html"), &participant_html).unwrap();
@@ -410,9 +420,9 @@ fn main() {
     for discussion_dir in std::fs::read_dir("discussions").unwrap() {
         let discussion_dir = discussion_dir.unwrap();
         let discussion_dir_path = discussion_dir.path();
-        let contents_path = discussion_dir_path.join("contents");
-        let contents = std::fs::read_to_string(contents_path).unwrap();
-        let discussion = parse(contents.lines());
+        let content_path = discussion_dir_path.join("content");
+        let content = std::fs::read_to_string(content_path).unwrap();
+        let discussion = parse(content.lines());
         let full_discussion = FullDiscussion {
             inner: discussion,
             directory_name: discussion_dir.file_name().to_str().unwrap().to_owned(),
@@ -428,16 +438,16 @@ fn main() {
         let count = idx + 1;
         let mut prev = None;
         if count != chunks_count {
-            prev = Some(format!("page_{}", count + 1));
+            prev = Some(format!("page_{}.html", count + 1));
         }
         let mut next = None;
         if count != 1 {
-            next = Some(format!("page_{}", count - 1));
+            next = Some(format!("page_{}.html", count - 1));
         }
         let index_html = make_index_html(chunk, &prev, &next);
         if prev.is_none() {
             std::fs::write("index.html", &index_html).unwrap();
         }
-        std::fs::write(format!("page_{}", count), &index_html).unwrap();
+        std::fs::write(format!("page_{}.html", count), &index_html).unwrap();
     }
 }
