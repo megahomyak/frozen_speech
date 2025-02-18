@@ -204,7 +204,7 @@ fn make_participant_html(participant_name: &str) -> String {
                     ),
                 ],
             )
-            .full_tag("ul", [], |d| {
+            .full_tag("ul", [("class", "links")], |d| {
                 d.iter(links.lines(), |d, link| {
                     d.full_tag("li", [], |d| {
                         d.full_tag("a", [("href", link)], |d| d.text(link))
@@ -260,10 +260,10 @@ fn make_discussion_html(discussion: &FullDiscussion) -> String {
                                 })
                                 .option(&message.reply_to_id, |d, reply_to_id| {
                                     let reply_to_id = format!("#{}", reply_to_id);
-                                    d.full_tag("span", [("class", "reply_to_id_span")], |d| {
+                                    d.full_tag("span", [("class", "reply-to-id-span")], |d| {
                                         d.text(&format!("reply to id: ")[..]).full_tag(
                                             "a",
-                                            [("class", "reply_to_id_a"), ("href", &reply_to_id)],
+                                            [("class", "reply-to-id-a"), ("href", &reply_to_id)],
                                             |d| d.text(&reply_to_id),
                                         )
                                     })
@@ -282,7 +282,7 @@ fn make_discussion_html(discussion: &FullDiscussion) -> String {
                                         MessagePart::Image(file_name) => d.open_tag(
                                             "img",
                                             [
-                                                ("class", "image_part"),
+                                                ("class", "image-part"),
                                                 ("src", file_name),
                                                 (
                                                     "alt",
@@ -295,7 +295,7 @@ fn make_discussion_html(discussion: &FullDiscussion) -> String {
                                             ],
                                         ),
                                         MessagePart::Text(text) => {
-                                            d.full_tag("pre", [("class", "text_part")], |d| {
+                                            d.full_tag("pre", [("class", "text-part")], |d| {
                                                 d.text(text)
                                             })
                                         }
@@ -362,7 +362,7 @@ fn make_index_html(
                 d.full_tag("div", [("class", "discussion")], |d| {
                     d.full_tag("h2", [], |d| {
                         d.full_tag("span", [("class", "emoji")], |d| d.text(&short.emoji))
-                            .full_tag("span", [("class", "title_text")], |d| {
+                            .full_tag("span", [("class", "title-text")], |d| {
                                 d.full_tag(
                                     "a",
                                     [(
