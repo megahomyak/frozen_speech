@@ -26,7 +26,9 @@ fs-img() (
     set -e
     read -p 'File name (without extension): ' FILE_NAME
     python -m cbsave -e "$FILE_NAME"
-    ls | grep --color=never "^$FILE_NAME\."
+    IMAGE_NAME="$(ls | grep --color=never "^$FILE_NAME\.")"
+    nvim "$IMAGE_NAME.description"
+    echo "$IMAGE_NAME"
 )
 
 fs-dsc() {
