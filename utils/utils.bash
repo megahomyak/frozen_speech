@@ -19,6 +19,7 @@ fs-usr() (
     mkdir "$USERNAME"
     cd "$USERNAME"
     python -m cbsave pfp
+    nvim pfp.description
     nvim links
 )
 

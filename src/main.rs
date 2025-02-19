@@ -165,6 +165,27 @@ impl HTML {
         }
         self
     }
+    fn pfp(self, class: &'static str, src: &str, author_name: &str) -> Self {
+        self.open_tag(
+            "img",
+            [
+                ("class", class),
+                ("src", src),
+                (
+                    "alt",
+                    &format!(
+                        "Profile picture of {}. {}",
+                        author_name,
+                        std::fs::read_to_string(format!(
+                            "participants/{}/pfp.description",
+                            author_name
+                        ))
+                        .unwrap()
+                    )[..],
+                ),
+            ],
+        )
+    }
 }
 
 fn make_html_document(title: &str, styles: &str, body: impl FnOnce(HTML) -> HTML) -> String {
@@ -193,17 +214,7 @@ fn make_participant_html(participant_name: &str) -> String {
     let links = std::fs::read_to_string(links_path).unwrap();
     make_html_document(participant_name, "../../participant.css", |d| {
         d.full_tag("h1", [], |d| d.text(participant_name))
-            .open_tag(
-                "img",
-                [
-                    ("class", "pfp"),
-                    ("src", "pfp"),
-                    (
-                        "alt",
-                        &format!("Profile picture of {}", participant_name)[..],
-                    ),
-                ],
-            )
+            .pfp("pfp", "pfp", participant_name)
             .full_tag("ul", [("class", "links")], |d| {
                 d.iter(links.lines(), |d, link| {
                     d.full_tag("li", [], |d| {
@@ -219,19 +230,10 @@ fn make_discussion_html(discussion: &FullDiscussion) -> String {
         d.full_tag("h1", [], |d| d.text(&discussion.inner.title))
             .iter(&discussion.inner.messages, |d, message| {
                 d.full_tag("div", [("class", "message")], |d| {
-                    d.open_tag(
-                        "img",
-                        [
-                            ("class", "pfp"),
-                            (
-                                "src",
-                                &format!("../../participants/{}/pfp", message.author_name)[..],
-                            ),
-                            (
-                                "alt",
-                                &format!("Profile picture of {}", message.author_name)[..],
-                            ),
-                        ],
+                    d.pfp(
+                        "pfp",
+                        &format!("../../participants/{}/pfp", message.author_name)[..],
+                        &message.author_name,
                     )
                     .full_tag(
                         "div",
