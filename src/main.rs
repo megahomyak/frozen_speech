@@ -178,9 +178,10 @@ impl HTML {
                         author_name,
                         std::fs::read_to_string(format!(
                             "participants/{}/pfp.description",
-                            author_name
+                            author_name,
                         ))
                         .unwrap()
+                        .trim()
                     )[..],
                 ),
             ],
@@ -288,11 +289,12 @@ fn make_discussion_html(discussion: &FullDiscussion) -> String {
                                                 ("src", file_name),
                                                 (
                                                     "alt",
-                                                    &std::fs::read_to_string(format!(
+                                                    std::fs::read_to_string(format!(
                                                         "discussions/{}/{}.description",
-                                                        discussion.directory_name, file_name
+                                                        discussion.directory_name, file_name,
                                                     ))
-                                                    .unwrap(),
+                                                    .unwrap()
+                                                    .trim(),
                                                 ),
                                             ],
                                         ),
