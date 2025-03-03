@@ -345,7 +345,7 @@ fn make_shorts(discussions: Vec<FullDiscussion>) -> Vec<DiscussionShort> {
             directory_name: discussion.directory_name,
         });
     }
-    shorts.sort_by_key(|short| short.moment);
+    shorts.sort_by_key(|short| std::cmp::Reverse(short.moment));
     shorts
 }
 
