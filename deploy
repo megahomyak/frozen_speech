@@ -1,19 +1,18 @@
-#!/bin/bash -e
-SSH_KEY_PATH=~/.ssh/id_rsa
-SSH_CONFIG_PATH=~/.ssh/config
-HOST="orange"
+#!/bin/bash
+SERVER_NAME=orange
+DIRECTORY_NAME=frozen_speech
 cargo build
 (cd contents && ~/rustc_target/debug/frozen_speech)
-sudo bash -e << EOF
-docker build --progress=plain . -t frozen_speech
-docker save frozen_speech -o frozen_speech.tar
-scp -F $SSH_CONFIG_PATH -i $SSH_KEY_PATH frozen_speech.tar $HOST:frozen_speech/frozen_speech.tar
-rm -f frozen_speech.tar
-ssh -F $SSH_CONFIG_PATH -i $SSH_KEY_PATH $HOST << EOF2
-docker rm --force frozen_speech
-cd frozen_speech
-docker load -i frozen_speech.tar
-docker run -d -p 8009:80 --name frozen_speech --restart unless-stopped frozen_speech
-EOF2
-docker image rm frozen_speech
+ssh $SERVER_NAME << EOF
+git init $DIRECTORY_NAME
+cd $DIRECTORY_NAME
+git config receive.denyCurrentBranch updateInstead
+EOF
+git remote add deployment $SERVER_NAME:$DIRECTORY_NAME
+git push deployment
+ssh $SERVER_NAME << EOF
+cd $DIRECTORY_NAME
+docker build --progress=plain . -t $DIRECTORY_NAME
+docker rm --force $DIRECTORY_NAME
+docker run -d -p 8009:80 --name $DIRECTORY_NAME --restart unless-stopped $DIRECTORY_NAME
 EOF
